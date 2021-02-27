@@ -15,22 +15,39 @@
       .text-white {
         color: white;
       }
+      .screen {
+        visibility: hidden;
+      }
     </style>
   </head>
   <body>
     <div id="nav" class="container text-white">
-      <a>Home</a>
-      <a>Form</a>
-      <a>Data</a>
-      <a>Map</a>
-      <a>About</a>
+      <a data-screen="Home">Home</a>
+      <a data-screen="Form">Form</a>
+      <a data-screen="Data">Data</a>
+      <a data-screen="Map">Map</a>
+      <a data-screen="About">About</a>
     </div>
     <div id="content" class="container text-white">
-      <div id="Home">content1</div>
-      <div id="Form">content2</div>
-      <div id="Data">content3</div>
-      <div id="Map">content4</div>
-      <div id="About"><content5/div>
+      <div class="screen" id="Home">content1</div>
+      <div class="screen" id="Form">content2</div>
+      <div class="screen" id="Data">content3</div>
+      <div class="screen" id="Map">content4</div>
+      <div class="screen" id="About">content5</div>
     </div>
+    <script>
+      let navAnchors = document.querySelectorAll("div#nav a")
+
+      navAnchors.forEach( (anchor) => {
+        anchor.addEventListener("click", (event) => {
+          document.querySelectorAll(".screen").forEach( (screen) => {
+            screen.style.visibility = "hidden";
+          })
+          let screen = event.target.getAttribute("data-screen");
+          let targetScreen = document.querySelector("#" + screen);
+          targetScreen.style.visibility = "visible";
+        })
+      })
+    </script>
   </body>
 </html>
