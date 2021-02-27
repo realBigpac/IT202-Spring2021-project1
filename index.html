@@ -16,38 +16,88 @@
         color: white;
       }
       .screen {
-        visibility: hidden;
+        display: none;
       }
     </style>
   </head>
   <body>
     <div id="nav" class="container text-white">
       <a data-screen="Home">Home</a>
-      <a data-screen="Form">Form</a>
-      <a data-screen="Data">Data</a>
+      <a data-screen="Form">Search</a>
+      <a data-screen="Data">Results</a>
       <a data-screen="Map">Map</a>
       <a data-screen="About">About</a>
     </div>
     <div id="content" class="container text-white">
-      <div class="screen" id="Home">content1</div>
-      <div class="screen" id="Form">content2</div>
-      <div class="screen" id="Data">content3</div>
-      <div class="screen" id="Map">content4</div>
-      <div class="screen" id="About">content5</div>
+      <div class="screen" id="Home">
+        <h>App Home Screen</h>
+        <p>This app allows searching the city of Chicago land data found at <a href="https://data.cityofchicago.org/Community-Economic-Development/City-Owned-Land-Inventory/aksk-kvfp">https://data.cityofchicago.org/Community-Economic-Development/City-Owned-Land-Inventory/aksk-kvfp</a></p>
+        <p>In order to begin use the search screen to make your selections, then view the results or map tab to see information about the searched locations</p>
+      </div>
+      <div class="screen" id="Form">
+        <form>
+          <input type="text" id="text1">ward</input>
+          <input type="text" id="text1">property status</input>
+          <input type="text" id="text1">zip code</input>
+          <input type="text" id="text1">address</input>
+        </form>
+        <button id="search">Search</button>
+      </div>
+      <div class="screen" id="Data">content3
+        
+      </div>
+      <div class="screen" id="Map">content4
+        
+      </div>
+      <div class="screen" id="About">content5
+        
+      </div>
     </div>
     <script>
+      document.querySelector("#Home").style.display = "block";
       let navAnchors = document.querySelectorAll("div#nav a")
-
       navAnchors.forEach( (anchor) => {
         anchor.addEventListener("click", (event) => {
           document.querySelectorAll(".screen").forEach( (screen) => {
-            screen.style.visibility = "hidden";
+            screen.style.display = "none";
           })
           let screen = event.target.getAttribute("data-screen");
           let targetScreen = document.querySelector("#" + screen);
-          targetScreen.style.visibility = "visible";
+          targetScreen.style.display = "block";
         })
       })
+
+      let endpoint = "https://data.cityofchicago.org/resource/xzkq-xp2w.json";
+
+      document.querySelector("#results").innerText = "fetching results";
+
+      document.querySelector("#search").addEventListener ("click", (e) => {
+
+          let f = document.querySelector("form");
+          let fd = new FormData(f);
+          let sp = new URLSearchParams(fd);
+
+          let url = endpoint +  "?" + sp.toString();
+
+          // fetch
+          fetch (url)
+            .then ( (response) => { return response.json() })
+            .then ( (json) => {
+                document.querySelector("#results").innerText = "Results found: " + json.length;  
+                for (let item of json) {
+                    // create a paragraph
+                    let p = document.createElement ("p");
+                    // set the value
+                    p.innerText = item["name"] + ": " + item["job_titles"];
+                    // append to body
+                    document.querySelector("#results").append(p);
+
+                }
+              
+            })
+
+
+      });
     </script>
   </body>
 </html>
