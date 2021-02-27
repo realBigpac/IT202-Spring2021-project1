@@ -21,14 +21,14 @@
     </style>
   </head>
   <body>
-    <div id="nav" class="container text-white">
+    <div id="nav" class="container">
       <a data-screen="Home">Home</a>
       <a data-screen="Form">Search</a>
       <a data-screen="Data">Results</a>
       <a data-screen="Map">Map</a>
       <a data-screen="About">About</a>
     </div>
-    <div id="content" class="container text-white">
+    <div id="content" class="container">
       <div class="screen" id="Home">
         <h>App Home Screen</h>
         <p>This app allows searching the city of Chicago land data found at <a href="https://data.cityofchicago.org/Community-Economic-Development/City-Owned-Land-Inventory/aksk-kvfp">https://data.cityofchicago.org/Community-Economic-Development/City-Owned-Land-Inventory/aksk-kvfp</a></p>
@@ -37,14 +37,23 @@
       <div class="screen" id="Form">
         <form>
           <input type="text" id="text1">ward</input>
-          <input type="text" id="text1">property status</input>
-          <input type="text" id="text1">zip code</input>
-          <input type="text" id="text1">address</input>
+          <input type="text" id="text2">property status</input>
+          <input type="text" id="text3">zip code</input>
+          <input type="text" id="text4">address</input>
         </form>
         <button id="search">Search</button>
       </div>
-      <div class="screen" id="Data">content3
-        
+      <div class="screen" id="Data">
+        <div class="card">
+          <div class="card-body">
+            <h class="card-head">comunity_area_name - pin</h>
+            <p class="card-text1">address - square footage</p>
+            <p class="card-text2">pin</p>
+          </div>
+        </div>
+        <div class="results">
+          
+        </div>
       </div>
       <div class="screen" id="Map">content4
         
@@ -67,9 +76,7 @@
         })
       })
 
-      let endpoint = "https://data.cityofchicago.org/resource/xzkq-xp2w.json";
-
-      document.querySelector("#results").innerText = "fetching results";
+      let endpoint = "https://data.cityofchicago.org/resource/aksk-kvfp.json";
 
       document.querySelector("#search").addEventListener ("click", (e) => {
 
@@ -79,24 +86,20 @@
 
           let url = endpoint +  "?" + sp.toString();
 
-          // fetch
           fetch (url)
             .then ( (response) => { return response.json() })
             .then ( (json) => {
-                document.querySelector("#results").innerText = "Results found: " + json.length;  
                 for (let item of json) {
-                    // create a paragraph
-                    let p = document.createElement ("p");
-                    // set the value
-                    p.innerText = item["name"] + ": " + item["job_titles"];
-                    // append to body
-                    document.querySelector("#results").append(p);
-
+                    let data = "aksk-kvfp"
+                    for (let data of json) {
+                      let clone = document.querySelector(".card").cloneNode(true)
+                      clone.querySelector(".card-head").innerText = data.community_area_name + " - " + data.pin
+                      clone.querySelector(".card-text1").innerText = data.address + " - " + data.sq_ft
+                      clone.querySelector(".card-text2").innerText = data.pin
+                      document.querySelector(".results").appendChild(clone)
+                    }
                 }
-              
             })
-
-
       });
     </script>
   </body>
