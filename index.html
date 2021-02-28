@@ -35,11 +35,11 @@
         <p>In order to begin use the search screen to make your selections, then view the results or map tab to see information about the searched locations</p>
       </div>
       <div class="screen" id="Form">
-        <form>
-          <input type="text" id="text1">ward</input>
-          <input type="text" id="text2">property status</input>
-          <input type="text" id="text3">zip code</input>
-          <input type="text" id="text4">address</input>
+        <form id="data">
+          <input type="text" name="ward" id="text1">ward</input>
+          <input type="text" name="property_status" id="text2">property status</input>
+          <input type="text" name="zip_code" id="text3">zip code</input>
+          <input type="text" name="address" id="text4">address</input>
         </form>
         <button id="search">Search</button>
       </div>
@@ -84,7 +84,40 @@
           let fd = new FormData(f);
           let sp = new URLSearchParams(fd);
 
-          let url = endpoint +  "?" + sp.toString();
+          let url = endpoint +  "?";
+
+          let values = sp.getAll("ward");
+
+          if (sp.getAll("ward") != "") {
+            url = url + "ward=" + sp.get("ward");
+            if (sp.getAll("property_status") != "") {
+              url = url + "&property_status=" + sp.getAll("property_status");
+            }
+            if (sp.getAll("zip_code") != "") {
+              url = url + "&zip_code=" + sp.get("zip_code");
+            }
+            if (sp.getAll("address") != "") {
+              url = url + "&address=" + sp.getAll("address");
+            }
+          } else if (sp.getAll("property_status") != "") {
+            url = url + "property_status=" + sp.getAll("property_status");
+            if (sp.getAll("zip_code") != "") {
+              url = url + "&zip_code=" + sp.get("zip_code");
+            }
+            if (sp.getAll("address") != "") {
+              url = url + "&address=" + sp.getAll("address");
+            }
+          } else if (sp.getAll("zip_code") != "") {
+            url = url + "zip_code=" + sp.get("zip_code");
+            if (sp.getAll("address") != "") {
+              url = url + "&address=" + sp.getAll("address");
+            }
+          } else if (sp.getAll("address") != "") {
+            url = url + "address=" + sp.getAll("address");
+          }
+
+          url = url.replace(/\s/g, '+');
+          console.log(url)
 
           fetch (url)
             .then ( (response) => { return response.json() })
