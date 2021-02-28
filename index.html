@@ -1,24 +1,43 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <title>City of Chicago land inventory</title>
-    <style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <style type="text/css">
       .container {
-        background-color: #d50032;
-      }
-      .container-fluid {
-        background-color: #001e62;
-      }
-      .text-white {
-        color: white;
+        background-color: cyan;
       }
       .screen {
         display: none;
       }
+      .map-container{
+        overflow:hidden;
+        padding-bottom:56.25%;
+        position:relative;
+        height:0;
+      }
+      .map-container iframe{
+        left:0;
+        top:0;
+        height:100%;
+        width:100%;
+        position:absolute;
+      }
     </style>
+    <script>
+      let map;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 41.872, lng: -87.648 },
+          zoom: 8,
+        });
+      }
+    </script>
   </head>
   <body>
     <div id="nav" class="container">
@@ -55,13 +74,20 @@
           
         </div>
       </div>
-      <div class="screen" id="Map">content4
-        
+      <div class="screen" id="Map">
+        <div id="map-container-google-1" class="z-depth-1-half map-containter" style="height: 100%">
+          <iframe src="https://maps.google.com/maps?q=chicago&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
       </div>
-      <div class="screen" id="About">content5
-        
+      <div class="screen" id="About">
+        <h>About</h>
+        <p>This app takes in data input in the search tab and displays results in the results tab and was made by Michael Wolfe.<p>
       </div>
     </div>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9jYMy_DHqPr3MxqDz78C7-rVhN4WZACI&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
     <script>
       document.querySelector("#Home").style.display = "block";
       let navAnchors = document.querySelectorAll("div#nav a")
@@ -78,7 +104,13 @@
 
       let endpoint = "https://data.cityofchicago.org/resource/aksk-kvfp.json";
 
-      document.querySelector("#search").addEventListener ("click", (e) => {
+      document.querySelector("#search").addEventListener("click", (e) => {
+
+          document.querySelectorAll(".card").forEach( (card) => {
+            card.style.display = "none";
+          })
+          document.querySelector("#Form").style.display = "none"
+          document.querySelector("#Data").style.display = "block"
 
           let f = document.querySelector("form");
           let fd = new FormData(f);
@@ -129,6 +161,7 @@
                       clone.querySelector(".card-head").innerText = data.community_area_name + " - " + data.pin
                       clone.querySelector(".card-text1").innerText = data.address + " - " + data.sq_ft
                       clone.querySelector(".card-text2").innerText = data.pin
+                      clone.style.display = "block";
                       document.querySelector(".results").appendChild(clone)
                     }
                 }
